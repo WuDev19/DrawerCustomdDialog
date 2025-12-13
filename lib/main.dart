@@ -1,0 +1,75 @@
+import 'package:drawer_customdialog/HomePage.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Demo Drawer"),
+          backgroundColor: Colors.greenAccent,
+        ),
+        body: const HomePage(),
+        drawer: Builder(
+          builder: (context) {
+            return Drawer(
+              child: ListView(
+                children: [
+                  ListTile(
+                    title: Text("Item 1"),
+                    subtitle: Text("Content 1"),
+                    onTap: () {
+                      showGeneralDialog(
+                        //tự custom dialog
+                        context: context,
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return Align(
+                            // phải dùng Align hoặc Center hoặc Positioned bọc bên ngoài thì chỉnh kích thước mới có hiệu lực
+                            alignment: Alignment.center,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.cyan,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.85,
+                              height: MediaQuery.of(context).size.height * 0.85,
+                              child: Text("Demo"),
+                            ),
+                          );
+                        },
+                        transitionBuilder: //định nghĩa cách dialog xuất hiện
+                        (context, animation, secondaryAnimation, child) {
+                          return ScaleTransition(
+                            //có nhiều các transaction, chỉ cần gõ transaction ra là ok
+                            // position: Tween(
+                            //   begin: Offset(1, 0),
+                            //   end: Offset.zero,
+                            // ).animate(animation),
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
