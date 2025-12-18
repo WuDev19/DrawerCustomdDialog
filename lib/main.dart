@@ -2,11 +2,13 @@ import 'package:drawer_customdialog/HomePage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  late final OverlayEntry? _overlay;
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +35,21 @@ class MyApp extends StatelessWidget {
                         //tự custom dialog
                         context: context,
                         pageBuilder: (context, animation, secondaryAnimation) {
+                          //trả về view của dialog
                           return Align(
                             // phải dùng Align hoặc Center hoặc Positioned bọc bên ngoài thì chỉnh kích thước mới có hiệu lực
                             alignment: Alignment.center,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.cyan,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
+                            child: Material(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
                               ),
-                              width: MediaQuery.of(context).size.width * 0.85,
-                              height: MediaQuery.of(context).size.height * 0.85,
-                              child: Text("Demo"),
+                              color: Colors.cyan,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.85,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.85,
+                                child: Text("Demo"),
+                              ),
                             ),
                           );
                         },
@@ -57,11 +61,21 @@ class MyApp extends StatelessWidget {
                             //   begin: Offset(1, 0),
                             //   end: Offset.zero,
                             // ).animate(animation),
-                            scale: animation,
+                            scale: Tween( //custom khoảng giá trị cho Animation<double>
+                              begin: 0.8,
+                              end: 1.0,
+                            ).animate(animation),
                             child: child,
                           );
                         },
                       );
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Item 2"),
+                    subtitle: Text("Content 2"),
+                    onTap: () {
+                      showOverlay(context);
                     },
                   ),
                 ],
@@ -72,4 +86,14 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  void showOverlay(BuildContext context) {
+    _overlay = OverlayEntry(
+      builder: (context) {
+        return Text("HIHIHI");
+      },
+    );
+    Overlay.of(context).insert(_overlay!);
+  }
+
 }
